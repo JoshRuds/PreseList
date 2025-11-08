@@ -16,14 +16,14 @@
         <input id="email" placeholder="Email Adress" type="email"><br>
         <label>Password</label><br>
         <input id="password" placeholder="Enter Password" type="password"><br>
-        <button id="signup">Sign Up</button>
+        <button class="button" id="signup">Sign Up</button>
         <button id="login">Log In</button><br>
-        <p id="status"></p>
+        <p id="status" class="button"></p>
 
         <script type="module">
             // Import the functions you need from the SDKs you need
             import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-            import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+            import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
             import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
             // TODO: Add SDKs for Firebase products that you want to use
@@ -47,16 +47,27 @@
             const passEl = document.getElementById("password");
             const statusEl = document.getElementById("status");
 
+            document.getElementById("resetPassword").onclick = async () => {
+                const email = emailEl.value
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    statusEl.textContent = "Password reset email sent!";
+                } catch (err) {
+                    statusEl.textContent = err.message;
+                }
+            };
+
             // Sign up
             document.getElementById("signup").onclick = async () => {
                 await createUserWithEmailAndPassword(auth, emailEl.value, passEl.value);
-                statusEl.textContent = "Account created! You're logged in.";
+                statusEl.textContent = "Account created! Please Sign In.";
             };
 
             // Log in
             document.getElementById("login").onclick = async () => {
                 await signInWithEmailAndPassword(auth, emailEl.value, passEl.value);
                 statusEl.textContent = "Logged in!";
+                window.location.href = "../";
             };
         </script>
     </body>
